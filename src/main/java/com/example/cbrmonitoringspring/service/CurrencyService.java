@@ -34,6 +34,7 @@ public class CurrencyService {
         Optional<Currency> foundedCurrency = currencyRepository.findByCode(normalizedCode);
 
         if (foundedCurrency.isPresent()) {
+            log.info("Currencies found for currency code at db {}", normalizedCode);
             return foundedCurrency.get();
         }
 
@@ -47,22 +48,9 @@ public class CurrencyService {
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("currency not found by code: " + normalizedCode));
 
-        return CurrencyMapper.toDomain(foundCurrency);
-    }
+        Currency currencyToDomain = CurrencyMapper.toDomain(foundCurrency);
+        save(currencyToDomain);
 
-    public Currency getOrCreateCurrencyByCode(String code) {
-        String normalizedCode = code.toUpperCase();
-        Optional<Currency> foundedCurrency = currencyRepository.findByCode(normalizedCode);
-
-        if (foundedCurrency.isPresent()) {
-            return foundedCurrency.get();
-        }
-
-        Currency currency = getCurrencyFromApiOrDb(normalizedCode);
-        save(currency);
-
-        exchangeRateService.save(currency);
-
-        return currency;
+        return currencyToDomain;
     }
 }

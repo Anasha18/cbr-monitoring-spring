@@ -33,7 +33,7 @@ public class SubscriptionService {
         User foundedUser = userService.findByTelegramId(telegramId)
                 .orElseThrow(() -> new RuntimeException("User not found with telegramId: " + telegramId));
 
-        Currency foundedCurrency = currencyService.getOrCreateCurrencyByCode(currencyCode);
+        Currency foundedCurrency = currencyService.getCurrencyFromApiOrDb(currencyCode);
 
         Optional<Subscription> foundedSubscription = subscriptionRepo.findByUserIdAndCurrencyId(foundedUser.getId(), foundedCurrency.getId());
 

@@ -23,10 +23,19 @@ extra["springCloudVersion"] = "2025.1.1"
 dependencies {
 
     // spring
+
+    // jpa
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    // web
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
+    // feign
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+    // liquibase
+    implementation("org.springframework.boot:spring-boot-starter-liquibase")
+    // dev
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+    // cache
+    implementation("org.springframework.boot:spring-boot-starter-cache:4.0.5")
 
     // lombok
     compileOnly("org.projectlombok:lombok")

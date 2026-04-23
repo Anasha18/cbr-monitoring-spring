@@ -1,0 +1,9 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: cbr-monitoring
+      POSTGRES_USER: cbr-monitoring
+      POSTGRES_DB: cbr-monitoring
+    ports:
+      - '5423:5432'

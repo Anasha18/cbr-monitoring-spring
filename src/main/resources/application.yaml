@@ -4,15 +4,17 @@ spring:
   datasource:
     password: cbr-monitoring
     username: cbr-monitoring
-    url: jdbc:postgresql://localhost:6543/cbr-monitoring
+    url: jdbc:postgresql://localhost:5423/cbr-monitoring
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
       show-sql: true
     open-in-view: false
   main:
     banner-mode: off
     web-application-type: none
+  liquibase:
+    enabled: true
 
 business-logic:
   telegram:

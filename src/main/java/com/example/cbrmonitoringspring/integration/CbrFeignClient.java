@@ -7,10 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @FeignClient(
         name = "cbr-api",
-        url = "${business-logic.cbr-api.url}",
-        configuration = CbrFeignConfig.class
+        url = "${business-logic.cbr-api.url}"
 )
 public interface CbrFeignClient {
-    @GetMapping("/daily_json.js")
+    @GetMapping(value = "/daily_json.js", produces = { "application/javascript" })
     CurrencyResponse getCurrencies();
 }
