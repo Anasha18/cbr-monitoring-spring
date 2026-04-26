@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.example"
-version = "0.0.1-SNAPSHOT"
+version = "1.0.0"
 description = "cbr-monitoring-spring"
 
 java {
@@ -24,18 +24,14 @@ dependencies {
 
     // spring
 
-    // jpa
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     // web
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     // feign
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
-    // liquibase
-    implementation("org.springframework.boot:spring-boot-starter-liquibase")
     // dev
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-    // cache
-    implementation("org.springframework.boot:spring-boot-starter-cache:4.0.5")
+    // resilence
+    implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j")
 
     // lombok
     compileOnly("org.projectlombok:lombok")
@@ -43,15 +39,12 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
 
-    // postgresql
-    runtimeOnly("org.postgresql:postgresql")
+    // telegram
+    implementation("org.telegram:telegrambots:6.9.7.1")
 
     // mapstruct
     implementation("org.mapstruct:mapstruct:1.6.3")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
-
-    // telegram
-    implementation("org.telegram:telegrambots:6.9.7.1")
 }
 
 dependencyManagement {

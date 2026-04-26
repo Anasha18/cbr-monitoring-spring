@@ -3,7 +3,7 @@ package com.example.cbrmonitoringspring.bot.statemachine.flow.conversion;
 import com.example.cbrmonitoringspring.bot.command.ConversionCommand;
 import com.example.cbrmonitoringspring.bot.statemachine.BotStateMachine;
 import com.example.cbrmonitoringspring.bot.statemachine.StateMachineResult;
-import com.example.cbrmonitoringspring.domain.Currency;
+import com.example.cbrmonitoringspring.integration.dto.currency.CurrencyResponseDto;
 import com.example.cbrmonitoringspring.service.CurrencyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -59,7 +59,7 @@ public class ConversionFlow implements BotStateMachine {
     }
 
     private String handleCurrencyFrom(ConversionSession conversionSession, String text) {
-        Currency currencyFrom = currencyService.getCurrencyFromApiOrDb(text);
+        CurrencyResponseDto currencyFrom = currencyService.getCurrencyFromApiOrDb(text);
 
         if (currencyFrom == null) {
             return "Такой валлюты нет...";
@@ -72,7 +72,7 @@ public class ConversionFlow implements BotStateMachine {
     }
 
     private String handleCurrencyTo(ConversionSession conversionSession, String text) {
-        Currency currencyTo = currencyService.getCurrencyFromApiOrDb(text);
+        CurrencyResponseDto currencyTo = currencyService.getCurrencyFromApiOrDb(text);
 
         if (currencyTo == null) {
             return "Такой валлюты нет...";
@@ -87,8 +87,8 @@ public class ConversionFlow implements BotStateMachine {
     private String handleAmount(Long chatId, ConversionSession conversionSession, String text) {
         BigDecimal amount = BigDecimal.valueOf(Double.parseDouble(text));
 
-        Currency currencyFrom = conversionSession.getCurrencyFrom();
-        Currency currencyTo = conversionSession.getCurrencyTo();
+        CurrencyResponseDto currencyFrom = conversionSession.getCurrencyFrom();
+        CurrencyResponseDto currencyTo = conversionSession.getCurrencyTo();
 
         if (currencyFrom == null || currencyTo == null) {
             conversionSession.setConversionStep(ConversionStep.WAITING_CURRENCY_CODE_FROM);
@@ -99,16 +99,16 @@ public class ConversionFlow implements BotStateMachine {
         sessions.remove(chatId);
 
         return String.format("%.2f %s = %.2f %s",
-                amount, currencyFrom.getCode(), result, currencyTo.getCode());
+                amount, currencyFrom.code(), result, currencyTo.code());
     }
 
     private BigDecimal processConvertCurrency(
-            Currency currencyFrom,
-            Currency currencyTo,
+            CurrencyResponseDto currencyFrom,
+            CurrencyResponseDto currencyTo,
             BigDecimal amount
     ) {
-        BigDecimal valuteCurrencyFrom = currencyFrom.getValue();
-        BigDecimal valuteCurrencyTo = currencyTo.getValue();
+        BigDecimal valuteCurrencyFrom = currencyFrom.value();
+        BigDecimal valuteCurrencyTo = currencyTo.value();
 
         BigDecimal amountInBase = amount.multiply(valuteCurrencyFrom);
 

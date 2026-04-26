@@ -1,24 +1,107 @@
 spring:
+  cloud.openfeign.client.config:
+
+    cbr-api:
+      url: https://www.cbr-xml-daily.ru
+      logger-level: full
+      connect-timeout: 200
+      read-timeout: 30000
+
+    users:
+      url: http://localhost:8090/api/v1/users
+      logger-level: full
+      connect-timeout: 200
+      read-timeout: 30000
+
+    currencies:
+      url: http://localhost:8090/api/v1/currencies
+      logger-level: full
+      connect-timeout: 200
+      read-timeout: 30000
+
+    rates:
+      url: http://localhost:8090/api/v1/rates
+      logger-level: full
+      connect-timeout: 200
+      read-timeout: 30000
+
+    subscriptions:
+      url: http://localhost:8090/api/v1/subscriptions
+      logger-level: full
+      connect-timeout: 200
+      read-timeout: 30000
+
+
   application:
     name: cbr-monitoring-spring
-  datasource:
-    password: cbr-monitoring
-    username: cbr-monitoring
-    url: jdbc:postgresql://localhost:5423/cbr-monitoring
-  jpa:
-    hibernate:
-      ddl-auto: validate
-      show-sql: true
-    open-in-view: false
+
   main:
     banner-mode: off
     web-application-type: none
-  liquibase:
-    enabled: true
 
-business-logic:
-  telegram:
-    token: 8648306817:AAHyDUnp8NU-SnotFTPEPEnsrGZ7w-VN08M
-    username: cbrMonitoringBot
-  cbr-api:
-    url: https://www.cbr-xml-daily.ru
+
+telegram:
+  token: 8648306817:AAHyDUnp8NU-SnotFTPEPEnsrGZ7w-VN08M
+  username: cbrMonitoringBot
+
+app:
+  notifications:
+    fixed-delay-ms: 60000
+    initial-delay-ms: 10000
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 100
+        permittedNumberOfCallsInHalfOpenState: 10
+        slowCallDurationThreshold: 4s
+        slowCallRateThreshold: 10
+        failureRateThreshold: 30
+        waitDurationInOpenState: 1s
+        minimumNumberOfCalls: 20
+    instances:
+      users:
+        baseConfig: default
+      subscriptions:
+        baseConfig: default
+      rates:
+        baseConfig: default
+      currencies:
+        baseConfig: default
+
+  retry:
+    configs:
+      default:
+        maxAttempts: 3
+        waitDuration: 100ms
+        retryExceptions:
+          - org.springframework.web.client.HttpServerErrorException
+          - java.util.concurrent.TimeoutException
+          - java.io.IOException
+    instances:
+      users:
+        baseConfig: default
+      subscriptions:
+        baseConfig: default
+      rates:
+        baseConfig: default
+      currencies:
+        baseConfig: default
+
+  rateLimiter:
+    configs:
+      default:
+        timeoutDuration: 5s
+        limitForPeriod: 10
+        limit-refresh-period: 1s
+    instances:
+      users:
+        baseConfig: default
+      subscriptions:
+        baseConfig: default
+      rates:
+        baseConfig: default
+      currencies:
+        baseConfig: default
+

@@ -21,8 +21,8 @@ public class CurrencyCommand implements Command {
         var found = currencyService.getCurrencyFromApiOrDb(query);
 
         return String.format("Курс %s (%s): %.2f руб.",
-                found.getCode(),
-                found.getName(),
-                found.getValue());
+                found.code(),
+                found.name(),
+                found.value());
     }
 }

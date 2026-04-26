@@ -2,7 +2,8 @@ package com.example.cbrmonitoringspring.bot;
 
 import com.example.cbrmonitoringspring.bot.exception.CommandNotFoundException;
 import com.example.cbrmonitoringspring.bot.statemachine.BotStateMachine;
-import com.example.cbrmonitoringspring.configuration.BusinessLogicProperties;
+import com.example.cbrmonitoringspring.configuration.TelegramConfig;
+import com.example.cbrmonitoringspring.integration.dto.user.UserResponseDto;
 import com.example.cbrmonitoringspring.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 @Component
 @RequiredArgsConstructor
 public class CbrMonitoringBot extends TelegramLongPollingBot {
-    private final BusinessLogicProperties config;
+    private final TelegramConfig config;
     private final UserService userService;
     private final CommandResolver commandResolver;
     private final BotStateMachine botStateMachine;
@@ -31,10 +32,10 @@ public class CbrMonitoringBot extends TelegramLongPollingBot {
         String text = update.getMessage().getText();
         User from = update.getMessage().getFrom();
 
-        var user = userService.getOrCreateUserByTelegramId(from.getUserName(), chatId);
+        UserResponseDto user = userService.getOrCreateUserByTelegramId(from.getUserName(), chatId);
 
         if (botStateMachine.hasActiveFlow(chatId)) {
-            var flowReply = botStateMachine.tryHandle(user.getTelegramId(), text);
+            var flowReply = botStateMachine.tryHandle(user.telegramId(), text);
             if (flowReply.isPresent()) {
                 sendMessage(chatId, flowReply.get());
                 return;
@@ -56,12 +57,12 @@ public class CbrMonitoringBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return config.getTelegram().username();
+        return config.username();
     }
 
     @Override
     public String getBotToken() {
-        return config.getTelegram().token();
+        return config.token();
     }
 
     public void sendMessage(Long chatId, String text) {
