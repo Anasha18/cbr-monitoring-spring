@@ -40,6 +40,12 @@ public class NotificationScheduler {
 
         for (SubscriptionResponseDto subscription : subscriptions) {
             try {
+                if (subscription.currencyId() == null || subscription.userId() == null) {
+                    log.error("Skip subscription with null links: id={}, userId={}, currencyId={}",
+                            subscription.id(), subscription.userId(), subscription.currencyId());
+                    continue;
+                }
+
                 BigDecimal rate = exchangeRateService.findLatestCurrencyByCurrencyId(subscription.currencyId());
                 CurrencyResponseDto currency = currencyService.getCurrencyById(subscription.currencyId());
                 UserResponseDto user = userService.findById(subscription.userId());

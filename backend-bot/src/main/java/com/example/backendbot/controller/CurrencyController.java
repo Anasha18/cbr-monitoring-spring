@@ -21,7 +21,7 @@ public class CurrencyController {
         return currencyMapper.toDto(currency);
     }
 
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public CurrencyResponseDto getCurrencyById(@PathVariable Long id) {
         Currency currency = currencyService.getCurrencyById(id);
         return currencyMapper.toDto(currency);

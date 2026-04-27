@@ -26,7 +26,7 @@ public interface CurrencyFeignClient {
     @RateLimiter(name = "currencies")
     @CircuitBreaker(name = "currencies")
     @Retry(name = "currencies")
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     CurrencyResponseDto getCurrencyById(@PathVariable Long id);
 
 }

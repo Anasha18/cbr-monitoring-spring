@@ -19,7 +19,6 @@ public class UserController {
     @GetMapping("/{id}")
     public UserResponseDto findById(@PathVariable Long id) {
         User user = userService.findById(id);
-
         return userMapper.toDto(user);
     }
 
@@ -28,7 +27,6 @@ public class UserController {
             @Valid @RequestBody UserRequestDto dto
     ) {
         User user = userService.getOrCreateUserByTelegramId(dto);
-
         return userMapper.toDto(user);
     }
 }

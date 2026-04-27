@@ -1,7 +1,8 @@
-package com.example.backendbot.integration;
+package com.example.backendbot.integration.config;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.Logger;
 import feign.codec.Decoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +26,16 @@ public class CbrFeignConfig {
             JavaType javaType = objectMapper.getTypeFactory().constructType(type);
             return objectMapper.readValue(bodyBytes, javaType);
         };
+    }
+
+    @Bean
+    public Logger.Level feignLoggerLevel() {
+        return Logger.Level.FULL;
+    }
+
+    @Bean
+    public Logger feignLogger() {
+        return new SimpleFeignLogger();
     }
 
     @Bean
